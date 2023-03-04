@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Barchart - By Jay</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <link rel="stylesheet" href="mystyles.css"/>
+</head>
+<body>
+    <script>
+
+        const container=d3.select("body")
+                          .append("div")
+                          .attr("id","container");
+
+        const title=d3.select("#container")
+                      .append("div")
+                      .attr("id","title")
+                      .text("this is the title");
+
+        const svg=d3.select("#container")
+                    .append("svg");
+
+        d3.select("svg")
+          .append("text")
+          .text("hello")
+          .attr("x",50)
+          .attr("y",50)
+          .attr("fill","red");
+    </script>
+    <script src="https://cdn.freecodecamp.org/testable-projects-fcc/v1/bundle.js"></script> 
+
+</body>
+</html>
