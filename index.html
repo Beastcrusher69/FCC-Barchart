@@ -11,23 +11,42 @@
     <script>
 
         const container=d3.select("body")
-                          .append("div")
-                          .attr("id","container");
-
+        .append("div")
+        .attr("id","container");
+        
         const title=d3.select("#container")
-                      .append("div")
-                      .attr("id","title")
-                      .text("this is the title");
+              .append("div")
+              .attr("id","title")
+              .text("United States GDP");
+
+        const req= new XMLHttpRequest();
+               req.open("GET","https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/GDP-data.json",true); 
+                req.send();
+
+                req.onload =function(){
+                    const json = JSON.parse(req.responseText);
+                    const dataset = json.data;
+
+                    const scale = d3.scaleLinear();
+                    scale.domain([d3.min(dataset,(d)=> d[1])]);
+                    scale.range([10,880]);
+
+                };
 
         const svg=d3.select("#container")
-                    .append("svg");
+                    .append("svg")
+                    .attr("width",900)
+                    .attr("height",450);
+
+        
 
         d3.select("svg")
-          .append("text")
+          .append("g")
           .text("hello")
           .attr("x",50)
           .attr("y",50)
           .attr("fill","red");
+
     </script>
     <script src="https://cdn.freecodecamp.org/testable-projects-fcc/v1/bundle.js"></script> 
 
