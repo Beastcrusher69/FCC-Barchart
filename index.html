@@ -10,6 +10,10 @@
 <body>
     <script>
 
+            w=1200;
+            h=750;  
+            padding=30;     
+
         const container=d3.select("body")
         .append("div")
         .attr("id","container");
@@ -23,20 +27,54 @@
                req.open("GET","https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/GDP-data.json",true); 
                 req.send();
 
+                
+
                 req.onload =function(){
                     const json = JSON.parse(req.responseText);
                     const dataset = json.data;
 
-                    const scale = d3.scaleLinear();
-                    scale.domain([d3.min(dataset,(d)=> d[1])]);
-                    scale.range([10,880]);
+                    const yScale = d3.scaleLinear();
+                    yScale.domain([d3.min(dataset,(d)=> d[1])],[d3.max(dataset,(d)=> d[1])]);
+                    yScale.range([h - padding, padding]);
+
+                    const xScale = d3.scaleLinear();
+                    xScale.domain([d3.min(dataset,(d)=> d[0]),d3.min(dataset,(d)=> d[0])]);
+                    xScale.range([padding,w-padding]);
+                    
+                    console.log(d3.min(dataset,(d)=> d[0]));
+
+                    svg.selectAll("rect")
+                       .data(dataset)
+                       .enter()
+                       .append("rect")
+                       .attr("width",15)
+                       .attr("height",(d) => {
+                            return d[1]*1.5})
+                       .attr("x", (d,i) => i*30 )
+                       .attr("y", (d) => h-(d[1]*1.5)-padding )
+                       .attr("fill","red");
+
+                       const yAxis = d3.axisLeft(yScale);
+
+                       svg.append("g")
+                      .attr("transform", "translate(" +  padding + ",0)")
+                      .attr("id","y-axis")
+                      .call(yAxis);
+
+                      const xAxis = d3.axisBottom(xScale);
+
+                      svg.append("g")
+                      .attr("transform", "translate(0, " + (h - padding) + ")")
+                      .attr("id","x-axis")
+                      .call(xAxis);
+
 
                 };
 
         const svg=d3.select("#container")
                     .append("svg")
-                    .attr("width",900)
-                    .attr("height",450);
+                    .attr("width",w)
+                    .attr("height",h);
 
         
 
