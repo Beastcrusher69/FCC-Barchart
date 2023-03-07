@@ -27,47 +27,53 @@
                req.open("GET","https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/GDP-data.json",true); 
                 req.send();
 
-                
-
                 req.onload =function(){
                     const json = JSON.parse(req.responseText);
                     const dataset = json.data;
 
                     const yScale = d3.scaleLinear();
                     yScale.domain([d3.min(dataset,(d)=> d[1])],[d3.max(dataset,(d)=> d[1])]);
-                    yScale.range([h - padding, padding]);
+                    yScale.range([h-padding, padding]);
 
                     const xScale = d3.scaleLinear();
                     xScale.domain([d3.min(dataset,(d)=> d[0]),d3.min(dataset,(d)=> d[0])]);
                     xScale.range([padding,w-padding]);
                     
-                    console.log(d3.min(dataset,(d)=> d[0]));
-
                     svg.selectAll("rect")
                        .data(dataset)
                        .enter()
                        .append("rect")
-                       .attr("width",15)
+                       .attr("class","bar")
+                       .attr("width",20)
+                       .attr("data-date",(d,i) => {
+                        return d[0];
+                       })
+                       .attr("data-gdp",(d,i) => {
+                        return d[1];
+                       })
                        .attr("height",(d) => {
-                            return d[1]*1.5})
+                            return d[1]*1.3})
                        .attr("x", (d,i) => i*30 )
-                       .attr("y", (d) => h-(d[1]*1.5)-padding )
-                       .attr("fill","red");
+                       .attr("y", (d) => h-(d[1]*1.3)-padding )
+                       .attr("fill","red")
 
-                       const yAxis = d3.axisLeft(yScale);
+                       const tooltip=d3.selectAll("rect")
+                       .append("title")
+                       .text((d) => d[1])
+                       .attr("id","tooltip");
+
+                       const yAxis = d3.axisLeft(yScale).ticks(5);
 
                        svg.append("g")
                       .attr("transform", "translate(" +  padding + ",0)")
                       .attr("id","y-axis")
                       .call(yAxis);
 
-                      const xAxis = d3.axisBottom(xScale);
-
+                      const xAxis = d3.axisBottom(xScale).ticks(5);
                       svg.append("g")
-                      .attr("transform", "translate(0, " + (h - padding) + ")")
+                      .attr("transform", "translate(0," + (h - padding) + ")")
                       .attr("id","x-axis")
                       .call(xAxis);
-
 
                 };
 
@@ -75,8 +81,6 @@
                     .append("svg")
                     .attr("width",w)
                     .attr("height",h);
-
-        
 
         d3.select("svg")
           .append("g")
